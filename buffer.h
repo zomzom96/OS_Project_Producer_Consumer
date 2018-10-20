@@ -1,12 +1,12 @@
 #ifndef BUFFER_HPP
 #define BUFFER_HPP
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <semaphore.h>
 #include "buffer.h"
+#include <pthread.h>
+#include <semaphore.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 typedef int buffer_item;
 #define BUFFER_SIZE 5
@@ -26,9 +26,8 @@ extern buffer_item buffer[BUFFER_SIZE];
 /* buffer counter */
 extern int counter;
 
-extern pthread_t tid;       //Thread ID
-extern pthread_attr_t attr; //Set of thread attributes
-
+extern pthread_t tid;       // Thread ID
+extern pthread_attr_t attr; // Set of thread attributes
 
 void *producer(void *param); /* the producer thread */
 void *consumer(void *param); /* the consumer thread */
