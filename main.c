@@ -1,6 +1,6 @@
 #include <iostream>
 #include <mutex> //for cout_sync
-#include "buffer.hh"
+#include "buffer.h"
 
 //For sleep durations in a C++11 manner
 #include <chrono>
