@@ -1,0 +1,19 @@
+{
+    "files.associations": {
+        "buffer.h": "c",
+        "algorithm": "cpp",
+        "functional": "cpp",
+        "memory": "cpp",
+        "random": "cpp",
+        "system_error": "cpp",
+        "thread": "cpp",
+        "type_traits": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "xfunctional": "cpp",
+        "xstddef": "cpp",
+        "xstring": "cpp",
+        "mutex": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}

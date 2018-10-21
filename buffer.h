@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <cstdlib>
+#include <iostream>
+#include <ctime>
 
 typedef int buffer_item;
 #define BUFFER_SIZE 5

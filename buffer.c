@@ -44,12 +44,12 @@ int remove_item(buffer_item *item) {
 /* Producer Thread */
 void *producer(void *param) {
   buffer_item item;
-
+  
   while (TRUE) {
     /* sleep for a random period of time */
     int rNum = rand() / RAND_DIVISOR;
     sleep(rNum);
-
+    srand(time(0));
     /* generate a random number */
     item = rand();
 
@@ -78,6 +78,7 @@ void *consumer(void *param) {
     /* sleep for a random period of time */
     int rNum = rand() / RAND_DIVISOR;
     sleep(rNum);
+    srand(time(0));
 
     /* aquire the full lock */
     sem_wait(&full);
