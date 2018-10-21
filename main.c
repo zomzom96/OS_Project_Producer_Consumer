@@ -1,79 +1,63 @@
-#include <iostream>
-#include <mutex> //for cout_sync
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
 #include "buffer.h"
 
-//For sleep durations in a C++11 manner
-#include <chrono>
-#include <thread>
-#include <random>
+void initializeData() {
 
-//Mersenne Twister RNG
-static std::mt19937 rng;
+	   /* Create the mutex lock */
+	   pthread_mutex_init(&mutex, NULL);
 
-static Buffer buffs[2];
+	   /* Create the full semaphore and initialize to 0 */
+	   sem_init(&full, 0, 0);
 
-static std::mutex cout_sync;
+	   /* Create the empty semaphore and initialize to BUFFER_SIZE */
+	   sem_init(&empty, 0, BUFFER_SIZE);
 
-void producer(int id)
-{
-    while (true)
-    {
-        int sleep_for = rng() % 500;
-        std::this_thread::sleep_for(std::chrono::milliseconds(sleep_for));
+	   /* Get the default attributes */
+	   pthread_attr_init(&attr);
 
-        int item = rng() % 100;
-        int i = rng() % 2;
-        buffs[i].insertItem(item);
-
-        cout_sync.lock();
-        std::cout << "Producer " << id << " inserted " << item << " to buffer " << i << std::endl;
-        cout_sync.unlock();
-    }
-}
-void consumer(int id)
-{
-    while (true)
-    {
-        int sleep_for = rng() % 500;
-        std::this_thread::sleep_for(std::chrono::milliseconds(sleep_for));
-
-        int i = rng() % 2;
-        int item = buffs[i].removeItem();
-
-        cout_sync.lock();
-        std::cout << "Consumer " << id << " consumed " << item << " from buffer " << i << std::endl;
-        cout_sync.unlock();
-    }
+	   /* init buffer */
+	   counter = 0;
 }
 
-int main(int argc, char **argv)
-{
-    if (argc != 4)
-    {
-        std::cout << "Usage: prodCons runningTime nProducers nConsumers" << std::endl;
-        return 1;
-    }
+int main(int argc, char *argv[]) {
+	   /* Loop counter */
+	   int i;
+	   /* Verify the correct number of arguments were passed in */
+	   if(argc != 4) {
+		fprintf(stderr, "USAGE:./main.out <INT> <INT> <INT>\n");
+           }
+     
+           //Check to see if user entered Neg Values
+	   else if(atoi(argv[1]) < 0 || atoi(argv[2]) < 0 || atoi(argv[3]) < 0) {
+		fprintf(stderr, "USAGE: arguments should be >= 0\n");
+		exit(1);
+           }
 
-    int runTime = atoi(argv[1]);
-    int nProducers = atoi(argv[2]);
-    int nConsumers = atoi(argv[3]);
-    
-	if (runTime <= 0 || nProducers <= 0 || nConsumers <= 0) {
-    	std::cout << "Invalid argument entered, program exiting" << std::endl;
-    	return 1;
-	}
-	
-	for (int i = 1; i <= nProducers; i++)
-	{
-	    std::thread t(producer, i);
-	    t.detach();
-	}
+	   int mainSleepTime = atoi(argv[1]); /* Time in seconds for main to sleep */
+	   int numProd = atoi(argv[2]); /* Number of producer threads */
+	   int numCons = atoi(argv[3]); /* Number of consumer threads */
+	   
+	   
 
-	for (int i = 1; i <= nConsumers; i++)
-	{
-    	std::thread t(consumer, i);
-    	t.detach();
-	}
+	   /* Initialize the app */
+	   initializeData();
+	   /* Create the producer threads */
+	   for(i = 0; i < numProd; i++) {
+		   /* Create the thread */
+		   pthread_create(&tid,&attr,producer,NULL);
+	   }
 
-	std::this_thread::sleep_for(std::chrono::seconds(runTime));
+	   /* Create the consumer threads */
+	   for(i = 0; i < numCons; i++) {
+		   /* Create the thread */
+		   pthread_create(&tid,&attr,consumer,NULL);
+	   }
+	   /* Sleep for the specified amount of time in milliseconds */
+	   sleep(mainSleepTime);
+	   /* Exit the program */
+	   printf("Exit the program\n");
+	   exit(0);
 }
+

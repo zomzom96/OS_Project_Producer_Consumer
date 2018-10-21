@@ -27,11 +27,15 @@ int main(int argc, char *argv[]) {
 	   /* Verify the correct number of arguments were passed in */
 	   if(argc != 4) {
 		fprintf(stderr, "USAGE:./main.out <INT> <INT> <INT>\n");
+           }else if (atoi(argv[1]) < 0 || atoi(argv[2]) < 0 || atoi(argv[3]) < 0){
+		fprintf(stderr, "USAGE: all arguments should be >= 0\n");
+		exit(1);
            }
 
 	   int mainSleepTime = atoi(argv[1]); /* Time in seconds for main to sleep */
 	   int numProd = atoi(argv[2]); /* Number of producer threads */
 	   int numCons = atoi(argv[3]); /* Number of consumer threads */
+	   
 	   /* Initialize the app */
 	   initializeData();
 	   /* Create the producer threads */
